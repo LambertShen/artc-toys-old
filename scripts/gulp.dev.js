@@ -2,6 +2,7 @@ const gulp = require("gulp");
 const gulp_clean = require("gulp-clean");
 const path = require("path");
 const webpack = require("webpack-stream");
+const { exec } = require("child_process");
 
 const rootPath = path.join(__dirname, "../");
 const reactFolderPath = path.join(rootPath, "./src/react");
@@ -30,4 +31,9 @@ const watch_react = () => {
     return gulp.watch(reactFolderPath, gulp.series(clean, build_react));
 };
 
-exports.default = gulp.series(clean, build_react, watch_react);
+const build_electron = (callback) => {
+    exec(`electron ${path.join(rootPath, "./src/electron/index.js")}`);
+    callback();
+};
+
+exports.default = gulp.series(clean, build_react, build_electron, watch_react);
